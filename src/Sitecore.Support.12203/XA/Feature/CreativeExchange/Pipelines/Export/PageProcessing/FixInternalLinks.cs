@@ -19,6 +19,30 @@ namespace Sitecore.Support.XA.Feature.CreativeExchange.Pipelines.Export.PageProc
         str = link.Substring(link.IndexOf('?'));
         link = link.Substring(0, link.IndexOf('?'));
       }
+      #region patch 12203
+      Language lan;
+      if (link.Length > 1)
+      {
+        if (link[0] == '/')
+        {
+          link = link.Substring(1);
+        }
+        if (link.Contains("/"))
+        {
+          if (Language.TryParse(link.Substring(0, link.IndexOf('/')), out lan))
+          {
+            link = link.Substring(link.IndexOf('/'));
+          }
+        }
+        else
+        {
+          if (Language.TryParse(link, out lan))
+          {
+            link = "/";
+          }
+        }
+      }
+      #endregion
       if (!link.EndsWith("/"))
       {
         link = link + "/";
